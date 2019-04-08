@@ -1,4 +1,5 @@
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
 public class GameObject {
 
@@ -8,6 +9,10 @@ public class GameObject {
 	int height;
 	
 	GameObject(int x, int y, int width, int height){
+		this.x=x;
+		this.y=y;
+		this.width=width;
+		this.height=height;
 		
 	}
 	
@@ -16,7 +21,7 @@ public class GameObject {
 	}
 	
 	void draw(Graphics g) {
-		g.fillRect(10, 10, 100, 100);
+		
 	}
 	
 }

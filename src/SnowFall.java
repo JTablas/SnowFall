@@ -6,8 +6,8 @@ public class SnowFall {
 
 	JFrame frame;
 	
-	final int width= 500;
-	final int height= 800;
+	public final static int width= 500;
+	public final static int height= 800;
 	
 	GamePanel game;
 	
