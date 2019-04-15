@@ -23,12 +23,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 	
 	int currentState = MENU_STATE;
 	
+	Snowboard board = new Snowboard(250,100,50,50);
+	ObjectManager sb = new ObjectManager(board);
+	
 	GamePanel(){
 	time = new Timer(1000/60,this);
 	
 	titleFont= new Font("Arial",Font.PLAIN,48);
 		
-	Rocketship rock = new Rocketship(250,700,50,50);
+	
 	
 	}
 
@@ -73,12 +76,40 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 			currentState=MENU_STATE;
 		}
 		System.out.println("Yee");
+		
+		if(e.getKeyCode()==KeyEvent.VK_RIGHT) {
+			board.right=true;
+		}
+		if(e.getKeyCode()==KeyEvent.VK_LEFT) {
+			board.left=true;
+		}
+		if(e.getKeyCode()==KeyEvent.VK_DOWN) {
+			board.down=true;
+		}
+		if(e.getKeyCode()==KeyEvent.VK_UP) {
+			board.up=true;
+		}
+		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println("Yaw");
+		
+		if(e.getKeyCode()==KeyEvent.VK_RIGHT) {
+			board.right=false;
+		}
+		if(e.getKeyCode()==KeyEvent.VK_LEFT) {
+			board.left=false;
+		}
+		if(e.getKeyCode()==KeyEvent.VK_DOWN) {
+			board.down=false;
+		}
+		if(e.getKeyCode()==KeyEvent.VK_UP) {
+			board.up=false;
+		}
+		
 	}
 
 	@Override
@@ -102,12 +133,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 		}
 	
 	void updateGameState() {
-		
+		sb.update();
+		sb.manageEnemies();
 	}
 	
 	void drawGameState(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, SnowFall.width, SnowFall.height);
+		
+		sb.draw(g);
+		
 	}
 	
 	void updateEndState() {
