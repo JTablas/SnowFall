@@ -6,17 +6,13 @@ public class ObjectManager {
 
 	Snowboard snbo;
 	
-	
-	
 	ObjectManager(Snowboard snbo){
 		this.snbo=snbo;
 	}
 	
 	long enemyTimer = 0;
 	
-	int enemySpawnTime =500;
-	
-	
+	int enemySpawnTime = 1000;
 	
 	ArrayList<Trees> tree = new ArrayList<Trees>();
 	
@@ -24,12 +20,13 @@ public class ObjectManager {
 		tree.add(tre);
 	}
 	
-	void update() {	
+	void update() {
+	snbo.update();	
+	
 	for(int i = 0; i<tree.size();i++) {
 		tree.get(i).update();
 	}
 	
-	snbo.update();	
 	}
 	
 	void draw(Graphics g) {
@@ -44,7 +41,7 @@ public class ObjectManager {
 
 public void manageEnemies(){
         if(System.currentTimeMillis() - enemyTimer >= enemySpawnTime){
-                addTrees(new Trees(new Random().nextInt(SnowFall.width), SnowFall.height, 50, 50));
+                addTrees(new Trees(new Random().nextInt(SnowFall.width), 0, 50, 50));
 
                 enemyTimer = System.currentTimeMillis();
         }
@@ -54,10 +51,8 @@ public void manageEnemies(){
 		for(int i = 0; i<tree.size();i++) {
 			if(tree.get(i).isAlive==false) {
 				tree.remove(i);
-				
 			}
 		}
-		
 	}
 
 	void checkCollision() {
@@ -67,11 +62,5 @@ public void manageEnemies(){
 		}
 		}
 	}
-	
-	void increaseDifficulty(){
-		enemySpawnTime-=20;
-	}
-	
-	
 	
 }
