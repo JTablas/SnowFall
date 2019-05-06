@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -14,6 +16,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 	Timer time;
 	
 	Font titleFont;
+	Font instruction;
+	
+	int score = 0;
 	
 	final int MENU_STATE = 0;
 
@@ -21,7 +26,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 
 	final int END_STATE = 2;
 	
+	long startTime= 0;
+	long endTime = 0;
+	
+	float frameTime = 0;
+	
+	double totalTime = 0;
+	
 	int currentState = MENU_STATE;
+	
+	double treetracker = 0;
 	
 	Snowboard board = new Snowboard(250,100,50,50);
 	ObjectManager sb = new ObjectManager(board);
@@ -30,8 +44,31 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 	time = new Timer(1000/60,this);
 	
 	titleFont= new Font("Arial",Font.PLAIN,48);
-		
+	instruction= new Font("Arial",Font.PLAIN,24);
 	
+	startTime=System.currentTimeMillis();
+	
+//	 public static BufferedImage treeImg;
+//
+//     public static BufferedImage snowBoarderImg;
+//
+//     public static BufferedImage snowmountainImg;
+//
+//     try {
+//
+//         alienImg = ImageIO.read(this.getClass().getResourceAsStream("alien.png"));
+//
+//         snowBoarderImg = ImageIO.read(this.getClass().getResourceAsStream("snowboarder.png"));
+//
+//         spaceImg = ImageIO.read(this.getClass().getResourceAsStream("space.png"));
+//
+// } catch (IOException e) {
+//
+//         // TODO Auto-generated catch block
+//
+//         e.printStackTrace();
+//
+// }
 	
 	}
 
@@ -51,6 +88,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 			updateEndState();
 		}
 		repaint();
+		
+		
 	}
 	
 	 @Override
@@ -63,6 +102,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 			 drawGameState(g);
 		 }else if(currentState==END_STATE) {
 			 drawEndState(g);
+			 
+			 
+			 
 		 }
 	 }
 
@@ -71,11 +113,21 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 		// TODO Auto-generated method stub
 		if(e.getKeyCode()==KeyEvent.VK_ENTER) {
 			currentState++;
+		if(currentState==GAME_STATE){
+			totalTime = 0;
+			startTime=System.currentTimeMillis();
+			score=0;
 		}
-		if(currentState>END_STATE) {
+			
+		if(currentState>END_STATE){
 			currentState=MENU_STATE;
+			board=new Snowboard(250,100,50,50);
+			sb= new ObjectManager(board);
+			
+			
 		}
-		System.out.println("Yee");
+		
+		}
 		
 		if(e.getKeyCode()==KeyEvent.VK_RIGHT) {
 			board.right=true;
@@ -95,7 +147,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("Yaw");
+		
 		
 		if(e.getKeyCode()==KeyEvent.VK_RIGHT) {
 			board.right=false;
@@ -115,7 +167,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("haw");
+		
 	}
 	
 	void updateMenuState() {
@@ -129,12 +181,46 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 		g.setFont(titleFont);
 		g.setColor(Color.WHITE);
 		g.drawString("SnowFall", 150, 150);
+		g.setFont(instruction);
+		g.drawString("Press Enter to start", 150, 400);
+		g.drawString("Press SPACE for instructions", 100, 450);
 		
 		}
 	
 	void updateGameState() {
 		sb.update();
 		sb.manageEnemies();
+		sb.checkCollision();
+		sb.purgeObjects();
+		
+		
+		if(board.isAlive==false){
+			currentState=END_STATE;
+			
+			startTime= 0;
+			endTime = 0;
+			
+			frameTime = 0;
+			
+			totalTime = 0;
+			
+		}
+		if(currentState==GAME_STATE){
+		endTime= System.currentTimeMillis();
+		frameTime = (float)(((double)endTime-(double)startTime)/1000.0);
+		totalTime += frameTime;
+		startTime = endTime;
+		score=(int)totalTime;
+		treetracker +=frameTime;
+		System.out.println(treetracker);
+		if(treetracker>5){
+		sb.increaseDifficulty();
+		treetracker=0;
+		}
+		
+		System.out.println(score);
+		}
+		
 	}
 	
 	void drawGameState(Graphics g) {
@@ -143,6 +229,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 		
 		sb.draw(g);
 		
+		g.setFont(titleFont);
+		g.setColor(Color.WHITE);
+		g.drawString("Score " + getScore(), 0, 40);
 	}
 	
 	void updateEndState() {
@@ -156,8 +245,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 		g.setFont(titleFont);
 		g.setColor(Color.WHITE);
 		g.drawString("GAME OVER", 120, 150);
+		g.setFont(instruction);
+		g.drawString("You have traveled " + getScore() + " seconds", 150,300);
+		g.drawString("Press Enter to restart", 150, 400);
 		
 		
-	}	
+	}
+	
+	int getScore(){
+		return score;
+	}
 	
 }

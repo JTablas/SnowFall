@@ -4,14 +4,14 @@ import java.awt.event.KeyEvent;
 
 public class GameObject {
 
+	Rectangle collisionBox;
+	
 	int x;
 	int y;
 	int width;
 	int height;
 	
 	boolean isAlive = true;
-	
-	Rectangle collisionBox;
 	
 	GameObject(int x, int y, int width, int height){
 		this.x=x;
