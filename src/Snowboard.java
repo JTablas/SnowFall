@@ -16,8 +16,7 @@ public class Snowboard extends GameObject{
 	int speed =5;
 	
 	void draw(Graphics g) {
-		g.setColor(Color.BLUE);
-		g.fillRect(x, y, width, height);
+		g.drawImage(GamePanel.snowBoarderImg, x-10, y-8, width+20, height+16, null);
 	}
 	
 	void update() {
@@ -34,7 +33,27 @@ public class Snowboard extends GameObject{
 		if(up==true) {
 			y-=speed;
 		}
+		if(x<0){
+			x=0;
+		}
+		if(x>SnowFall.width-20){
+			x=SnowFall.width-20;
+		}
+		if(y<0){
+			y=0;
+		}
+		if(y>SnowFall.height-20){
+			y=SnowFall.height-20;
+		}
 		
+	}
+	
+	int getX(){
+		return x;
+	}
+	
+	int getY(){
+		return y;
 	}
 
 	
