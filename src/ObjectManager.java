@@ -12,7 +12,7 @@ public class ObjectManager {
 	
 	long enemyTimer = 0;
 	
-	int enemySpawnTime = 1000;
+	int enemySpawnTime = 500;
 	
 	ArrayList<Trees> tree = new ArrayList<Trees>();
 	
@@ -21,12 +21,12 @@ public class ObjectManager {
 	}
 	
 	void update() {
-	snbo.update();	
+	
 	
 	for(int i = 0; i<tree.size();i++) {
 		tree.get(i).update();
 	}
-	
+	snbo.update();	
 	}
 	
 	void draw(Graphics g) {
@@ -41,7 +41,7 @@ public class ObjectManager {
 
 public void manageEnemies(){
         if(System.currentTimeMillis() - enemyTimer >= enemySpawnTime){
-                addTrees(new Trees(new Random().nextInt(SnowFall.width), 0, 50, 50));
+                addTrees(new Trees(new Random().nextInt(SnowFall.width), SnowFall.height, 50, 50));
 
                 enemyTimer = System.currentTimeMillis();
         }
@@ -61,6 +61,10 @@ public void manageEnemies(){
 				snbo.isAlive=false;
 		}
 		}
+	}
+	
+	void increaseDifficulty(){
+		enemySpawnTime-=20;
 	}
 	
 }
